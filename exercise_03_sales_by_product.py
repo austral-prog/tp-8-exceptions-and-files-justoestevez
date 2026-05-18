@@ -31,8 +31,23 @@ def read_sales(filename):
             "producto2": [200.0],
         }
     """
-    pass  # Reemplazar con tu implementación
-
+ventas = {}
+    with open(filename, 'r') as archivo:
+        contenido = archivo.read().strip()
+    registros = contenido.split(';')
+    for reg in registros:
+        if reg: # El truco salvavidas: evita el string vacío del final
+            # 4. Separamos el nombre del precio usando los dos puntos ':'
+            producto, monto_str = reg.split(':')
+            monto = float(precio_texto) # Lo pasamos a número decimal
+            
+            # 5. Agrupamos en el diccionario
+            if producto in ventas:
+                ventas[producto].append(monto) # Si ya existía, agregamos el precio a su lista
+            else:
+                ventas[producto] = [monto] # Si es nuevo, creamos la lista con el primer precio
+                
+    return ventas    
 
 def process_sales(data):
     """
@@ -53,4 +68,15 @@ def process_sales(data):
         process_sales({"producto1": [100.0, 150.0]})
         # imprime: "producto1: ventas totales $250.00, promedio $125.00"
     """
-    pass  # Reemplazar con tu implementación
+for producto, lista_de_precios in data.items():
+        
+        # Sumamos de forma manual con un acumulador
+        total_ventas = 0
+        for precio in lista_de_precios:
+            total_ventas += precio
+            
+        # Calculamos el promedio (el total dividido cuántos precios hay)
+        promedio = total_ventas / len(lista_de_precios)
+        
+        # Imprimimos con el formato de dos decimales
+        print(f"{producto}: ventas totales ${total_ventas:.2f}, promedio ${promedio:.2f}")

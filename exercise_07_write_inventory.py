@@ -28,37 +28,21 @@ def write_inventory(filename, inventory):
         # iron:7
         # wood:10
     """
-    resultado_final = {}
-    
-    with open(filename, 'r') as archivo:
-        for linea in archivo:
-            linea_limpia = linea.strip()
+    items_restantes = list(inventory.keys())
+    with open(filaname,'w') as archivo:
+        while len(items_restantes) > 0:
             
-            # Si la línea tiene datos (no está vacía)
-            if linea_limpia: 
-                
-                # PRIMER CORTE: Separamos el nombre del "choclo" de notas
-                nombre, bloque_notas = linea_limpia.split(':')
-                # nombre = 'Ana'
-                # bloque_notas = '8,9,7'
-                # quedaria una lista la cual es ['Ana', '8,9,7']
-                # SEGUNDO CORTE: Cortamos las notas por las comas
-                lista_notas_texto = bloque_notas.split(',')  #solo se lo hace a las notas, el nombre queda
-                # lista_notas_texto = ['8', '9', '7']
-                
-                # PASAR A NÚMEROS: Como están como texto, las pasamos a float
-                lista_notas_numeros = []
-                for nota_txt in lista_notas_texto:
-                    lista_notas_numeros.append(float(nota_txt))
-                # lista_notas_numeros = [8.0, 9.0, 7.0]
-                
-                # LOS TRES CÁLCULOS:
-                promedio = sum(lista_notas_numeros) / len(lista_notas_numeros)
-                maximo = max(lista_notas_numeros)
-                minimo = min(lista_notas_numeros)
-                
-                # GUARDAR EN EL DICCIONARIO:
-                # La clave es el nombre, y el valor es la tupla (promedio, max, min)
-                resultado_final[nombre] = (promedio, maximo, minimo)
-                
-    return resultado_final
+            # Buscamos el primero alfabéticamente de los que quedan (igual que buscar un mínimo)
+            primero_alfabeticamente = items_restantes[0]
+            for item in items_restantes:
+                if item < primero_alfabeticamente:
+                    primero_alfabeticamente = item
+            
+            # En este punto, 'primero_alfabeticamente' ya tiene el que va primero (ej: 'coal')
+            cantidad = inventory[primero_alfabeticamente]
+            
+            # 4. Lo escribimos en el archivo
+            archivo.write(f"{primero_alfabeticamente}:{cantidad}\n")
+            
+            # 5. Lo sacamos de la lista para no volver a elegirlo en la próxima vuelta del while, clave
+            items_restantes.remove(primero_alfabeticamente)

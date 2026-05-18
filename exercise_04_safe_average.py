@@ -28,4 +28,28 @@ def safe_average(filename):
         # archivo contiene: "10\n20\nno_es_un_numero\n30\n"
         safe_average("numeros.txt") -> 20.0
     """
-    pass  # Reemplazar con tu implementación
+    suma_total = 0
+    cantidad_numeros = 0
+    
+    # 1. Abrimos el archivo. Si no existe, explota solo (FileNotFoundError)
+    with open(filename, 'r') as archivo:
+        for linea in archivo:
+            linea_limpia = linea.strip()
+            
+            if linea_limpia: # Si la línea no está vacía
+                try:
+                    # 2. Intentamos convertir la línea a número decimal
+                    numero = float(linea_limpia)
+                    suma_total += numero
+                    cantidad_numeros += 1
+                except ValueError:
+                    # 3. Si no era un número (ej: "hola"), Python tira ValueError. 
+                    # Con 'pass' le decimos: "No hagas nada, ignoralo y pasá a la siguiente línea"
+                    pass 
+                    
+    # 4. Palito del test: Si el archivo existía pero no se cargó ningún número válido
+    if cantidad_numeros == 0:
+        raise ValueError("no valid numbers")
+        
+    # 5. Si todo salió bien, calculamos el promedio
+    return suma_total / cantidad_numeros

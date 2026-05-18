@@ -31,23 +31,34 @@ def read_sales(filename):
             "producto2": [200.0],
         }
     """
-ventas = {}
+    ventas_dict = {}
+    
     with open(filename, 'r') as archivo:
         contenido = archivo.read().strip()
-    registros = contenido.split(';')
-    for reg in registros:
-        if reg: # El truco salvavidas: evita el string vacío del final
-            # 4. Separamos el nombre del precio usando los dos puntos ':'
-            producto, monto_str = reg.split(':')
-            monto = float(precio_texto) # Lo pasamos a número decimal
+        
+    # Cortamos el texto largo en una lista de pedacitos
+    lista_de_pedacitos = contenido.split(';') 
+    
+    # Revisamos un pedacito a la vez
+    for pedacito in lista_de_pedacitos:
+        
+        # if pedacito: significa "Si el pedacito NO está vacío"
+        # Esto salta el último pedacito que quedó vacío por el ';' del final
+        if pedacito: 
             
-            # 5. Agrupamos en el diccionario
-            if producto in ventas:
-                ventas[producto].append(monto) # Si ya existía, agregamos el precio a su lista
+            # Ahora cortamos el pedacito a la mitad usando los ':'
+            producto, precio_texto = pedacito.split(':')
+            
+            # Pasamos el precio de texto a número decimal
+            monto = float(precio_texto) 
+            
+            # Guardamos en el diccionario (igual que el inventario)
+            if producto in ventas_dict:
+                ventas_dict[producto].append(monto)
             else:
-                ventas[producto] = [monto] # Si es nuevo, creamos la lista con el primer precio
+                ventas_dict[producto] = [monto]
                 
-    return ventas    
+    return ventas_dict 
 
 def process_sales(data):
     """
@@ -68,7 +79,7 @@ def process_sales(data):
         process_sales({"producto1": [100.0, 150.0]})
         # imprime: "producto1: ventas totales $250.00, promedio $125.00"
     """
-for producto, lista_de_precios in data.items():
+    for producto, lista_de_precios in data.items():
         
         # Sumamos de forma manual con un acumulador
         total_ventas = 0

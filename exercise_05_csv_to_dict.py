@@ -34,4 +34,36 @@ def csv_to_dict(filename):
             {"name": "Bob", "age": 25, "city": "Rosario"},
         ]
     """
-    pass  # Reemplazar con tu implementación
+    resultado = []
+    
+    with open(filename, 'r') as archivo:
+        # 1. Leemos todas las líneas del archivo juntas
+        lineas = archivo.readlines()
+        
+    # 2. Si el archivo está vacío o solo tiene la primera línea (el encabezado/header), devolvemos []
+    if len(lineas) <= 1:
+        return []
+        
+    # 3. La primera línea es SIEMPRE el encabezado ("name,age,city")
+    # Le sacamos los espacios y la cortamos por las comas
+    encabezado = lineas[0].strip().split(',') # Esto da: ['name', 'age', 'city']
+    
+    # 4. Recorremos las demás líneas (desde la posición 1 en adelante)
+    for linea in lineas[1:]:
+        linea_limpia = linea.strip()
+        
+        if linea_limpia: # Si la línea tiene datos
+            # Cortamos los datos de la persona por la comas
+            datos = linea_limpia.split(',') # Ej: ['Alice', '30', 'Buenos Aires']
+            
+            # 5. Armamos el diccionario para esta persona usando las claves del encabezado
+            persona_dict = {
+                'name': datos[0],
+                'age': int(datos[1]), # Obligatorio pasarlo a número entero
+                'city': datos[2]
+            }
+            
+            # Guardamos el diccionario de esta persona en nuestra lista final
+            resultado.append(persona_dict)
+            
+    return resultado

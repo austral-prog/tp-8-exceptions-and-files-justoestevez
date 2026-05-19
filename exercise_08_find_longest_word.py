@@ -27,7 +27,7 @@ def find_longest_word(filename):
         # archivo contiene: "el gato corre rapido\npor el jardin\n"
         find_longest_word("texto.txt") -> "rapido"
     """
-palabra_ganadora = ""
+    palabra_ganadora = ""
     max_letras = -1  # Empezamos con un piso bien bajo
     
     # 1. Abrimos y leemos todo el archivo

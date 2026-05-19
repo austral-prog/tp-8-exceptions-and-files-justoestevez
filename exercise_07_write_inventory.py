@@ -29,20 +29,24 @@ def write_inventory(filename, inventory):
         # wood:10
     """
     items_restantes = list(inventory.keys())
-    with open(filaname,'w') as archivo:
+    
+    # 2. Abrimos el archivo para escribir ('w')
+    with open(filename, 'w') as archivo:
+        
+        # 3. Mientras queden cosas en la lista de pendientes...
         while len(items_restantes) > 0:
             
-            # Buscamos el primero alfabéticamente de los que quedan (igual que buscar un mínimo)
+            # Buscamos el menor alfabéticamente
             primero_alfabeticamente = items_restantes[0]
             for item in items_restantes:
                 if item < primero_alfabeticamente:
                     primero_alfabeticamente = item
             
-            # En este punto, 'primero_alfabeticamente' ya tiene el que va primero (ej: 'coal')
+            # Buscamos la cantidad real que tiene ese producto en el diccionario
             cantidad = inventory[primero_alfabeticamente]
             
-            # 4. Lo escribimos en el archivo
+            # 4. Lo escribimos con el formato EXACTO y el salto de línea
             archivo.write(f"{primero_alfabeticamente}:{cantidad}\n")
             
-            # 5. Lo sacamos de la lista para no volver a elegirlo en la próxima vuelta del while, clave
+            # 5. Lo tachamos de la lista para pasar al siguiente
             items_restantes.remove(primero_alfabeticamente)

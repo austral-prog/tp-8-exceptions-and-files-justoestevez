@@ -42,4 +42,32 @@ def parse_log(filename):
             "WARN": ["lento"],
         }
     """
-    pass  # Reemplazar con tu implementación
+    resultado_log = {}
+    
+    # 1. Abrimos el archivo. Si no existe, explota solo (FileNotFoundError)
+    with open(filename, 'r') as archivo:
+        for linea in archivo:
+            linea_limpia = linea.strip()
+            
+            # REGLA 1: Las líneas vacías se ignoran por completo
+            if linea_limpia: 
+                
+                # REGLA 2: Si la línea NO tiene los dos puntos, es inválida
+                if ":" not in linea_limpia:
+                    raise ValueError("invalid log line")
+                
+                # PRIMER CORTE: Separamos el nivel del mensaje
+                # Usamos split(':', 1) para que corte SOLO en el primer ':' que encuentre
+                partes = linea_limpia.split(':', 1)
+                
+                # Limpiamos los espacios que puedan tener el nivel o el mensaje
+                nivel = partes[0].strip()   # Ej: "INFO"
+                mensaje = partes[1].strip() # Ej: "servidor iniciado"
+                
+                # GUARDAR EN DICCIONARIO DE LISTAS:
+                if nivel in resultado_log:
+                    resultado_log[nivel].append(mensaje) # Si ya existía el nivel, agregamos el mensaje a su lista
+                else:
+                    resultado_log[nivel] = [mensaje] # Si es un nivel nuevo, creamos la lista con su primer mensaje
+                    
+    return resultado_log
